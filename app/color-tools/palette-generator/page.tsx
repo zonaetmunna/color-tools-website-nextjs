@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Copy, RefreshCw } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { Copy, RefreshCw } from "lucide-react"
+import { useState } from "react"
 
 type PaletteType = "analogous" | "complementary" | "triadic" | "tetradic" | "monochromatic" | "split-complementary"
 
@@ -18,82 +18,7 @@ export default function PaletteGenerator() {
   const [copied, setCopied] = useState(false)
   const { toast } = useToast()
 
-  // Generate palette when base color or palette type changes
-  useState(() => {
-    generatePalette()
-  })
 
-  // Generate color palette based on selected type
-  const generatePalette = () => {
-    const hsl = hexToHSL(baseColor)
-    let newPalette: string[] = []
-
-    switch (paletteType) {
-      case "analogous":
-        // Colors adjacent on the color wheel (30° apart)
-        newPalette = [
-          hslToHex(hsl.h - 60, hsl.s, hsl.l),
-          hslToHex(hsl.h - 30, hsl.s, hsl.l),
-          baseColor,
-          hslToHex(hsl.h + 30, hsl.s, hsl.l),
-          hslToHex(hsl.h + 60, hsl.s, hsl.l),
-        ]
-        break
-      case "complementary":
-        // Colors opposite on the color wheel (180° apart)
-        newPalette = [
-          hslToHex(hsl.h, hsl.s, hsl.l - 20),
-          hslToHex(hsl.h, hsl.s - 20, hsl.l),
-          baseColor,
-          hslToHex((hsl.h + 180) % 360, hsl.s - 20, hsl.l),
-          hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l - 20),
-        ]
-        break
-      case "triadic":
-        // Three colors evenly spaced on the color wheel (120° apart)
-        newPalette = [
-          hslToHex(hsl.h, hsl.s - 20, hsl.l),
-          baseColor,
-          hslToHex((hsl.h + 120) % 360, hsl.s, hsl.l),
-          hslToHex((hsl.h + 240) % 360, hsl.s, hsl.l),
-          hslToHex((hsl.h + 240) % 360, hsl.s - 20, hsl.l),
-        ]
-        break
-      case "tetradic":
-        // Four colors forming a rectangle on the color wheel
-        newPalette = [
-          baseColor,
-          hslToHex((hsl.h + 90) % 360, hsl.s, hsl.l),
-          hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l),
-          hslToHex((hsl.h + 270) % 360, hsl.s, hsl.l),
-        ]
-        break
-      case "monochromatic":
-        // Different shades and tints of the same hue
-        newPalette = [
-          hslToHex(hsl.h, hsl.s, Math.max(0, hsl.l - 40)),
-          hslToHex(hsl.h, hsl.s, Math.max(0, hsl.l - 20)),
-          baseColor,
-          hslToHex(hsl.h, Math.max(0, hsl.s - 30), Math.min(100, hsl.l + 20)),
-          hslToHex(hsl.h, Math.max(0, hsl.s - 50), Math.min(100, hsl.l + 40)),
-        ]
-        break
-      case "split-complementary":
-        // Base color and two colors adjacent to its complement
-        newPalette = [
-          hslToHex(hsl.h, hsl.s - 20, hsl.l),
-          baseColor,
-          hslToHex((hsl.h + 150) % 360, hsl.s, hsl.l),
-          hslToHex((hsl.h + 210) % 360, hsl.s, hsl.l),
-          hslToHex((hsl.h + 210) % 360, hsl.s - 20, hsl.l),
-        ]
-        break
-    }
-
-    setPalette(newPalette)
-  }
-
-  // Convert HEX to HSL
   const hexToHSL = (hex: string) => {
     // Remove # if present
     hex = hex.replace(/^#/, "")
@@ -195,6 +120,87 @@ export default function PaletteGenerator() {
 
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`
   }
+
+  
+
+  // Generate color palette based on selected type
+  const generatePalette = () => {
+    const hsl = hexToHSL(baseColor)
+    let newPalette: string[] = []
+
+    switch (paletteType) {
+      case "analogous":
+        // Colors adjacent on the color wheel (30° apart)
+        newPalette = [
+          hslToHex(hsl.h - 60, hsl.s, hsl.l),
+          hslToHex(hsl.h - 30, hsl.s, hsl.l),
+          baseColor,
+          hslToHex(hsl.h + 30, hsl.s, hsl.l),
+          hslToHex(hsl.h + 60, hsl.s, hsl.l),
+        ]
+        break
+      case "complementary":
+        // Colors opposite on the color wheel (180° apart)
+        newPalette = [
+          hslToHex(hsl.h, hsl.s, hsl.l - 20),
+          hslToHex(hsl.h, hsl.s - 20, hsl.l),
+          baseColor,
+          hslToHex((hsl.h + 180) % 360, hsl.s - 20, hsl.l),
+          hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l - 20),
+        ]
+        break
+      case "triadic":
+        // Three colors evenly spaced on the color wheel (120° apart)
+        newPalette = [
+          hslToHex(hsl.h, hsl.s - 20, hsl.l),
+          baseColor,
+          hslToHex((hsl.h + 120) % 360, hsl.s, hsl.l),
+          hslToHex((hsl.h + 240) % 360, hsl.s, hsl.l),
+          hslToHex((hsl.h + 240) % 360, hsl.s - 20, hsl.l),
+        ]
+        break
+      case "tetradic":
+        // Four colors forming a rectangle on the color wheel
+        newPalette = [
+          baseColor,
+          hslToHex((hsl.h + 90) % 360, hsl.s, hsl.l),
+          hslToHex((hsl.h + 180) % 360, hsl.s, hsl.l),
+          hslToHex((hsl.h + 270) % 360, hsl.s, hsl.l),
+        ]
+        break
+      case "monochromatic":
+        // Different shades and tints of the same hue
+        newPalette = [
+          hslToHex(hsl.h, hsl.s, Math.max(0, hsl.l - 40)),
+          hslToHex(hsl.h, hsl.s, Math.max(0, hsl.l - 20)),
+          baseColor,
+          hslToHex(hsl.h, Math.max(0, hsl.s - 30), Math.min(100, hsl.l + 20)),
+          hslToHex(hsl.h, Math.max(0, hsl.s - 50), Math.min(100, hsl.l + 40)),
+        ]
+        break
+      case "split-complementary":
+        // Base color and two colors adjacent to its complement
+        newPalette = [
+          hslToHex(hsl.h, hsl.s - 20, hsl.l),
+          baseColor,
+          hslToHex((hsl.h + 150) % 360, hsl.s, hsl.l),
+          hslToHex((hsl.h + 210) % 360, hsl.s, hsl.l),
+          hslToHex((hsl.h + 210) % 360, hsl.s - 20, hsl.l),
+        ]
+        break
+    }
+
+    setPalette(newPalette)
+  }
+
+
+  // Generate palette when base color or palette type changes
+  useState(() => {
+    generatePalette()
+  })
+
+  // Convert HEX to HSL
+  
 
   // Copy color to clipboard
   const copyToClipboard = (color: string) => {
